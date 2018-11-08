@@ -6,7 +6,8 @@ from random import randint
 pygame.init()
 pygame.mixer.music.load("pop.wav")
 
-turn = 310
+maze_slice = 310     # ennek a valtozonak a segitsegevel nem lesz printelve az osszes karakter egyszerre (csak 310)
+
 # matrix keszitese a megadott fajlbol
 def matrix_file(file_name):
     m = []                # ebbe kerul majd a matrix
@@ -14,8 +15,8 @@ def matrix_file(file_name):
 
     # soronkent vegigmegyunk a fajlon
     for line in f:
-        line = line.strip()           # a sorbol toroljuk a whitespace karaktereket (pl sortores)
-        line = list(line)             # listava alakitjuk a sor stringet "111001" -> ["1", "1", "1", "0", "0", "1"]
+        line = line.strip()           # a sorbol toroljuk a whitespace karaktereket
+        line = list(line)             # listava alakitjuk a sor stringet
 
         m.append(line)   # beletesszuk a listat (sort) a matrixba
     
@@ -30,7 +31,7 @@ def matrix_file(file_name):
             x = randint(1, len(m) - 2)
             y = randint(1, len(m[0]) - 2)
 
-        # ha megvan, odateszunk egy ellenseget
+        # ha megvan, odateszunk egy ellenseget (plusz biztositva van, hogy az ellensegek ne zarjak el az utat)
         if m[x-1][y] != "3" and m[x][y-1] != "3" and m[x+1][y] != "3" and m[x][y+1] != "3" and m[x-1][y-1] != "3" and m[x-1][y+1] != "3" and m[x+1][y+1] != "3" and m[x+1][y-1] != "3":
             m[x][y] = "3"
 
@@ -51,10 +52,11 @@ matrix = matrix_file("maze.txt")
 
 # labirintus es mozgathato karakter kirajzolasahoz fuggveny
 def printmaze(matrix):
-    k = 0
+    chars_count = 0     # kirajzolt karakterek megszamolasa
+
     for row in (matrix):
         for char in (row):
-            if k < turn:
+            if chars_count < maze_slice:
                 if char == "0" or char == "4":     # ures helyek, ellenseg melletti mezok
                     sys.stdout.write("  ")
                 elif char == "1":                  # fal
@@ -65,7 +67,7 @@ def printmaze(matrix):
                     sys.stdout.write("⚉ ")
                 elif char == "5":                 
                     sys.stdout.write("ↀ ")
-                k += 1
+                chars_count += 1
         print()
 
 
@@ -82,7 +84,9 @@ printmaze(matrix)
 while not (matrix[28][39] == "2" or matrix[29][39] == "2"): # ez a ket pozicio a labrinitus kijaratat jelenti
     move = getch.getch()
     print("\033[H\033[J")           # kepernyo frissitese
+    
     matrix[i][j] = "0"              # ez a sor biztositja, hogy csak egy 2-es (kor) legyen egyszerre a labirintusban
+
     if move == "a":                 # balra lepes = matrix[i][j-1] --> a jatekos nem valtoztatja a sort, az oszlopot viszont eggyel balra igen
         if matrix[i][j-1] != "1":   # ha nem falra erkezik a kor
             j = j - 1               # akkor egy pozicioval balrabb fogja kirajzolni azt
@@ -102,8 +106,9 @@ while not (matrix[28][39] == "2" or matrix[29][39] == "2"): # ez a ket pozicio a
     if matrix[i][j] == "3":
         print("You died!")
         exit()
+
     if matrix[i][j] == "5":
-        turn += 310
+        maze_slice += 310
 
     matrix[i][j] = "2"               # az eppen aktualis pozicio valtson 0-rol, 3-rol vagy 4-rol 2-re (korre)
     printmaze(matrix)

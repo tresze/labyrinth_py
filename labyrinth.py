@@ -1,6 +1,7 @@
 #labyrinth.py
 
 import os, pygame, sys, getch
+from random import randint
 
 pygame.init()
 pygame.mixer.music.load("pop.wav")
@@ -12,10 +13,34 @@ def matrix_file(file_name):
 
     # soronkent vegigmegyunk a fajlon
     for line in f:
-        line = line.strip()           # a sorbol toroljuk a whitespace karaktereket (pl sortores)
-        line = list(line)             # listava alakitjuk a sor stringet "111001" -> ["1", "1", "1", "0", "0", "1"]
+        line = line.strip()           # a sorbol toroljuk a whitespace karaktereket
+        line = list(line)             # listava alakitjuk a sor stringet
 
         m.append(line)   # beletesszuk a listat (sort) a matrixba
+    
+    # ellensegek generalasa
+    for i in range(0, 6):
+        # veletlen koordinata generalasa (nem a legszelso mezokhoz)
+        x = randint(1, len(m) - 2)
+        y = randint(1, len(m[0]) - 2)
+
+        # folytatjuk, amig nem talalunk olyat, ahol ures hely van
+        while m[x][y] != "0":
+            x = randint(1, len(m) - 2)
+            y = randint(1, len(m[0]) - 2)
+
+        # ha megvan, odateszunk egy ellenseget
+        m[x][y] = "3"
+
+        # es korbevesszuk az ellenseg koruli mezokkel
+        if m[x-1][y] == "0":
+            m[x-1][y] = "4"
+        if m[x][y-1] == "0":
+            m[x][y-1] = "4"
+        if m[x+1][y] == "0":
+            m[x+1][y] = "4"
+        if m[x][y+1] == "0":
+            m[x][y+1] = "4"
     
     return m
 
@@ -43,7 +68,7 @@ i, j = 1, 1
 print("\nControls: W, A, S, D.\nPress a button to start the game.\n")
 getch.getch()                       # ennek a segitsegevel folyamatos a mozgas, nem kell mindig Entert leutni
 matrix[1][1] = "2"                  # a 2-es (kor) kezdopozicioja
-printmaze(matrix)                   # a labirintus kirajzolasa
+printmaze(matrix)
 
 # mozgas implementalasa
 while not (matrix[28][39] == "2" or matrix[29][39] == "2"): # ez a ket pozicio a labrinitus kijaratat jelenti
@@ -63,17 +88,17 @@ while not (matrix[28][39] == "2" or matrix[29][39] == "2"): # ez a ket pozicio a
         if matrix[i-1][j] != "1":
             i = i - 1
 
-    if matrix[i][j] == "4":         # az ellenseg melletti mezokon
+    if matrix[i][j] == "4":
         print("Don't touch the enemy!\n")
 
-    if matrix[i][j] == "3":         # az ellensegre lepve
+    if matrix[i][j] == "3":
         print("You died!")
         exit()
 
     matrix[i][j]= "2"               # az eppen aktualis pozicio valtson 0-rol, 3-rol vagy 4-rol 2-re (korre)
     printmaze(matrix)
-    pygame.mixer.music.play()       # hang lejatszasa
+    pygame.mixer.music.play()
     
 else:
-    print("Congratulations! You managed to get out of the labyrinth!") # jatek vege
+    print("Congratulations! You managed to get out of the labyrinth!")
 

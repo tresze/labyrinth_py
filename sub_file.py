@@ -11,7 +11,8 @@ clock = pygame.time.Clock()
 
 def main():
 
-    credit_list = ["Concept, code, & design by (me)c"," ","Art & animation by (my artist)","Special thanks (other people who contributed in ways other than playtesting, e.g. event coordinators, etc.)", "Third-party (engine, tools, libraries)", "Mark Wahlberg - Dignam", "Martin Sheen - Queenan"]
+    credit_list = ["Concept, code, & design by Eszter Molnár (Tresze)c"," ","Art & animation by - Bereck Gergő (Gergő)"," Thanks for  Adam Deak(Tejfi)- Who contributed in other ways for the project",
+     "Third-party ()",]
 
     texts = []
     # we render the text once, since it's easier to work with surfaces

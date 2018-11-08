@@ -1,10 +1,55 @@
 #labyrinth.py
 
-import os, pygame, sys, getch
-from random import randint
+import os, sys, getch, contextlib, subprocess
+with contextlib.redirect_stdout(None):
+    import pygame
+    from random import randint
 
-pygame.init()
-pygame.mixer.music.load("pop.wav")
+    pygame.init()
+    pygame.mixer.music.load("pop.wav")
+    create = [sys.executable, 'sub_file.py']
+    class bcolors:
+        PURPLE = '\033[95m'
+        BLUE = '\033[94m'
+        GREEN = '\033[92m'
+        YELLOW = '\033[93m'
+        RED = '\033[91m'
+        ENDC = '\033[0m'
+        BOLD = '\033[1m'
+        UNDERLINE = '\033[4m'
+
+
+
+    filename3 = "mazo.txt"
+    header1 =" Please choose from the options."
+    header2 = " Player vs. Player (w)"
+    header3 = "Player vs. Computer (2)"
+    header4 = "Quit (3)"
+    header5 = "Credits (C)"
+    filename2 = bcolors.GREEN + """
+
+                                                                         _           _                _       _   _     
+                                                                        | |         | |              (_)     | | | |    
+                                                                        | |     __ _| |__  _   _ _ __ _ _ __ | |_| |__  
+                                                                        | |    / _` | '_ \| | | | '__| | '_ \| __| '_ \ 
+                                                                        | |___| (_| | |_) | |_| | |  | | | | | |_| | | |
+                                                                        |______\__,_|_.__/ \__, |_|  |_|_| |_|\__|_| |_|
+                                                                                            __/ |                       
+                                                                                            |___/                        
+                    """ + bcolors.ENDC
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 maze_slice = 310     # ennek a valtozonak a segitsegevel nem lesz printelve az osszes karakter egyszerre (csak 310)
 
@@ -75,8 +120,9 @@ def printmaze(matrix):
 i, j = 1, 1
 
 # jatek inditasa es a labirintus kirajzolasa
-print("\nControls: W, A, S, D.\nPress a button to start the game.\n")
-getch.getch()                       # ennek a segitsegevel folyamatos a mozgas, nem kell mindig Entert leutni
+print("%s \n %110s \n %+105s \n %+105s \n %+98s \n %+98s " % (filename2,header1,header2,header3,header4,header5))
+getch.getch()
+os.system('clear')                    # ennek a segitsegevel folyamatos a mozgas, nem kell mindig Entert leutni
 matrix[1][1] = "2"                  # a 2-es (kor) kezdopozicioja
 printmaze(matrix)
 
@@ -99,6 +145,12 @@ while not (matrix[28][39] == "2" or matrix[29][39] == "2"): # ez a ket pozicio a
     if move == "w":
         if matrix[i-1][j] != "1":
             i = i - 1
+    if move == "c":
+        subprocess.call(create)
+    
+    
+    
+            
 
     if matrix[i][j] == "4":
         print("Don't touch the enemy!\n")
@@ -110,6 +162,7 @@ while not (matrix[28][39] == "2" or matrix[29][39] == "2"): # ez a ket pozicio a
     if matrix[i][j] == "5":
         maze_slice += 310
 
+
     matrix[i][j] = "2"               # az eppen aktualis pozicio valtson 0-rol, 3-rol vagy 4-rol 2-re (korre)
     printmaze(matrix)
     pygame.mixer.music.play()
@@ -117,3 +170,9 @@ while not (matrix[28][39] == "2" or matrix[29][39] == "2"): # ez a ket pozicio a
 else:
     print("Congratulations! You managed to get out of the labyrinth!")
 
+def exit_program():
+   while True:
+        for e in pygame.event.get():
+            if e.type == QUIT or e.type == KEYDOWN and e.key == pygame.K_ESCAPE:
+                exit_program()
+                

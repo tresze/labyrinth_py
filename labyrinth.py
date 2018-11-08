@@ -170,9 +170,3 @@ while not (matrix[28][39] == "2" or matrix[29][39] == "2"): # ez a ket pozicio a
 else:
     print("Congratulations! You managed to get out of the labyrinth!")
 
-def exit_program():
-   while True:
-        for e in pygame.event.get():
-            if e.type == QUIT or e.type == KEYDOWN and e.key == pygame.K_ESCAPE:
-                exit_program()
-                

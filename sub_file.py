@@ -11,7 +11,7 @@ clock = pygame.time.Clock()
 
 def main():
 
-    credit_list = ["Concept, code, & design by Eszter Molnár (Tresze)c"," ","Art & animation by - Bereck Gergő (Gergő)"," Thanks for  Adam Deak(Tejfi)- Who contributed in other ways for the project",
+    credit_list = ["Concept, code, & design by Eszter Molnár (Tresze)"," ","Art & animation by - Bereck Gergő (Gergő)"," Thanks for  Adam Deak(Tejfi)- Who contributed in other ways for the project",
      "Third-party ()",]
 
     texts = []

@@ -5,28 +5,28 @@ with contextlib.redirect_stdout(None):
     import pygame
     from random import randint
 
-    pygame.init()
-    pygame.mixer.music.load("pop.wav")
-    create = [sys.executable, 'sub_file.py']
-    class bcolors:
-        PURPLE = '\033[95m'
-        BLUE = '\033[94m'
-        GREEN = '\033[92m'
-        YELLOW = '\033[93m'
-        RED = '\033[91m'
-        ENDC = '\033[0m'
-        BOLD = '\033[1m'
-        UNDERLINE = '\033[4m'
+pygame.init()
+pygame.mixer.music.load("pop.wav")
 
+create = [sys.executable, "sub_file.py"]     # stablista letrehozasa
 
+class bcolors:
+    PURPLE = '\033[95m'
+    BLUE = '\033[94m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
-    filename3 = "mazo.txt"
-    header1 =" Please choose from the options."
-    header2 = " Player vs. Player (w)"
-    header3 = "Player vs. Computer (2)"
-    header4 = "Quit (3)"
-    header5 = "Credits (C)"
-    filename2 = bcolors.GREEN + """
+# menu szovege
+menu1 = "Please choose from the options:"
+menu2 = "Let's play! (p)"
+menu3 = "Credits (c)"
+menu4 = "Quit (q)"
+
+filename = bcolors.GREEN + """
 
                                                                          _           _                _       _   _     
                                                                         | |         | |              (_)     | | | |    
@@ -38,23 +38,8 @@ with contextlib.redirect_stdout(None):
                                                                                             |___/                        
                     """ + bcolors.ENDC
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-maze_slice = 310     # ennek a valtozonak a segitsegevel nem lesz printelve az osszes karakter egyszerre (csak 310)
-
 # matrix keszitese a megadott fajlbol
-def matrix_file(file_name):
+def load_matrix(file_name):
     m = []                # ebbe kerul majd a matrix
     f = open(file_name)   # fajl megnyitasa
 
@@ -93,7 +78,10 @@ def matrix_file(file_name):
     return m
 
 # a matrix elemei innen elerhetove valnak sor es oszlop alapjan; pl. a bal felso sarok igy: matrix[0][0]
-matrix = matrix_file("maze.txt")
+matrix = load_matrix("maze.txt")
+
+# ennek a valtozonak a segitsegevel nem lesz printelve az osszes karakter egyszerre (csak 310)
+maze_slice = 310
 
 # labirintus es mozgathato karakter kirajzolasahoz fuggveny
 def printmaze(matrix):
@@ -115,20 +103,32 @@ def printmaze(matrix):
                 chars_count += 1
         print()
 
-
 # matrix soraihoz es oszlopaihoz inicializalt valtozok
 i, j = 1, 1
 
-# jatek inditasa es a labirintus kirajzolasa
-print("%s \n %110s \n %+105s \n %+105s \n %+98s \n %+98s " % (filename2,header1,header2,header3,header4,header5))
-getch.getch()
-os.system('clear')                    # ennek a segitsegevel folyamatos a mozgas, nem kell mindig Entert leutni
-matrix[1][1] = "2"                  # a 2-es (kor) kezdopozicioja
-printmaze(matrix)
+# menu
+print("%s \n %110s \n %+102s \n %+100s \n %+99s" % (filename, menu1, menu2, menu3, menu4))
+
+user_input = ""
+
+while user_input != "p" and user_input != "c" and user_input != "q":
+    user_input = getch.getch()
+
+    if user_input == "p":                   # jatek inditasa es a labirintus kirajzolasa
+        os.system("clear")
+        matrix[1][1] = "2"                  # a 2-es (kor) kezdopozicioja
+        printmaze(matrix)
+    elif user_input == "c":                 # stablista
+        subprocess.call(create)
+        exit()
+    elif user_input == "q":
+        exit()
+    else:
+        print("Invalid input! Please enter \"p\", \"c\" or \"q\": ")
 
 # mozgas implementalasa
 while not (matrix[28][39] == "2" or matrix[29][39] == "2"): # ez a ket pozicio a labrinitus kijaratat jelenti
-    move = getch.getch()
+    move = getch.getch()            # ennek a segitsegevel folyamatos a mozgas, nem kell mindig Entert leutni
     print("\033[H\033[J")           # kepernyo frissitese
     
     matrix[i][j] = "0"              # ez a sor biztositja, hogy csak egy 2-es (kor) legyen egyszerre a labirintusban
@@ -145,23 +145,25 @@ while not (matrix[28][39] == "2" or matrix[29][39] == "2"): # ez a ket pozicio a
     if move == "w":
         if matrix[i-1][j] != "1":
             i = i - 1
-    if move == "c":
-        subprocess.call(create)
-    
-    
-    
-            
 
     if matrix[i][j] == "4":
         print("Don't touch the enemy!\n")
 
     if matrix[i][j] == "3":
-        print("You died!")
-        exit()
+        tryagain = ""
+
+        while tryagain != "y" and tryagain != "Y" and tryagain != "n" and tryagain != "N":
+            tryagain = input("You died! Would you like to try again from where you failed before? (y/n)\n")
+
+            if tryagain == "y" or tryagain == "Y":
+                pass
+            elif tryagain == "n" or tryagain == "N":
+                exit()
+            else:
+                tryagain = input("Invalid input! Please enter \"y\" or \"n\": ")
 
     if matrix[i][j] == "5":
         maze_slice += 310
-
 
     matrix[i][j] = "2"               # az eppen aktualis pozicio valtson 0-rol, 3-rol vagy 4-rol 2-re (korre)
     printmaze(matrix)

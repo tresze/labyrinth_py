@@ -3,7 +3,7 @@ import pygame
 from pygame.locals import *
 
 pygame.init()
-pygame.display.set_caption('End credits')
+pygame.display.set_caption("End credits")
 screen = pygame.display.set_mode((1600, 900))
 screen_r = screen.get_rect()
 font = pygame.font.SysFont("Conspiracy", 60)
@@ -11,8 +11,7 @@ clock = pygame.time.Clock()
 
 def main():
 
-    credit_list = ["Concept, code, & design by Eszter Molnár (Tresze)"," ","Art & animation by - Bereck Gergő (Gergő)"," Thanks for  Adam Deak(Tejfi)- Who contributed in other ways for the project",
-     "Third-party ()",]
+    credit_list = ["Concept, code, & design - Eszter Molnár (Tresze)", "Art & animation - Gergő Bereczk (Gergő)", "", "Thanks to Adam Deak (Tejfi) for contributing in other ways for the project."]
 
     texts = []
     # we render the text once, since it's easier to work with surfaces
@@ -48,5 +47,5 @@ def main():
         # cap framerate at 60 FPS
         clock.tick(60)
 
-if __name__ == '__main__': 
+if __name__ == '__main__':
     main()

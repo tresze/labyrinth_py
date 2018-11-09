@@ -11,7 +11,7 @@ clock = pygame.time.Clock()
 
 def main():
 
-    credit_list = ["Concept, code, & design - Eszter Molnár (Tresze)","","Art & animation - Gergő Bereczk (Gergő)", "", "Thanks to Adam Deak (Tejfi) for contributing in other ways for the project."]
+    credit_list = ["Labyrinth Game project on the 4th TW Week","" , "", "", "Concept, code, & design - Eszter Molnár (Tresze)","","Art & animation - Gergő Bereczk (Gergő)", "", "Thanks to Adam Deak (Tejfi) for contributing in other ways for the project.","","","Thank you for your  attention!"]
 
     texts = []
     # we render the text once, since it's easier to work with surfaces
